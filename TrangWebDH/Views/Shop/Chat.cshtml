@@ -1,0 +1,17 @@
+﻿@model List<ChatMessage>
+
+<div class="container">
+    <h2>Chat với khách hàng</h2>
+
+    @foreach (var message in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <strong>@message.Sender</strong> - @message.SentDate
+            </div>
+            <div class="card-body">
+                <p>@message.Message</p>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,150 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TrangWebDH.Models
+@using TrangWebDH.Data
+@using Microsoft.EntityFrameworkCore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IServiceProvider ServiceProvider
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrangWebDH</title>
+
+    <!-- BOOTSTRAP 5 + ICONS + CSS CHUẨN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- RENDER CSS TỪ VIEW CON -->
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <h1 class="mb-0 fw-bold">
+                        <a asp-controller="Home" asp-action="Index" class="text-white text-decoration-none">
+                            TrangWebDH
+                        </a>
+                    </h1>
+                </div>
+                <div class="col-md-6">
+                    <!-- SEARCH BAR -->
+                    <form asp-controller="Home" asp-action="Search" method="get" class="d-flex">
+                        <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                        <button type="submit" class="btn btn-light ms-2">
+                            <i class="bi bi-search"></i> Tìm
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-3 text-end">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-door"></i> Trang chủ
+                        </a>
+                    </li>
+
+                    @* MENU CHO CUSTOMER *@
+                    @if (User.IsInRole("Customer"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                <i class="bi bi-cart3"></i> Giỏ hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Cart" asp-action="MyOrders">
+                                <i class="bi bi-box-seam"></i> Đơn hàng của tôi
+                            </a>
+                        </li>
+                    }
+
+                    @* MENU CHO SHOP OWNER *@
+                    @if (User.IsInRole("ShopOwner"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Shop" asp-action="Dashboard">
+                                <i class="bi bi-shop"></i> Quản lý shop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Shop" asp-action="Products">
+                                <i class="bi bi-box"></i> Sản phẩm
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Shop" asp-action="AddProduct">
+                                <i class="bi bi-plus-circle"></i> Thêm sản phẩm
+                            </a>
+                        </li>
+                    }
+
+                    @* MENU CHO ADMIN *@
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Admin" asp-action="Users">
+                                <i class="bi bi-people"></i> Quản lý người dùng
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <!-- CHỌN DANH MỤC (nếu cần) -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" data-bs-toggle="dropdown">
+                            <i class="bi bi-grid"></i> Chọn danh mục
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Điện tử</a></li>
+                            <li><a class="dropdown-item" href="#">Thời trang</a></li>
+                            <li><a class="dropdown-item" href="#">Nội thất</a></li>
+                            <li><a class="dropdown-item" href="#">Sách</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container my-5">
+        @RenderBody()
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-light text-center py-4 mt-5 border-top">
+        <div class="container">
+            <p class="mb-0">© 2025 - TrangWebDH</p>
+        </div>
+    </footer>
+
+    <!-- JS CHUẨN -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

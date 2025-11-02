@@ -1,0 +1,108 @@
+﻿@model IEnumerable<TrangWebDH.Models.Order>
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📦 Đơn hàng của tôi</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-box-seam" style="font-size: 5rem; color: #ccc;"></i>
+            <h4 class="mt-3">Chưa có đơn hàng nào</h4>
+            <p class="text-muted">Hãy đặt hàng ngay!</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                Khám phá sản phẩm
+            </a>
+        </div>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="mb-1">Đơn hàng #@order.Id</h6>
+                            <small class="text-muted">@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                        <div class="col-md-3">
+                            <small>Shop: <strong>@order.Shop.Name</strong></small>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            @if (order.Status == "Pending")
+                            {
+                                <span class="badge bg-warning">Chờ xác nhận</span>
+                            }
+                            else if (order.Status == "Processing")
+                            {
+                                <span class="badge bg-info">Đang xử lý</span>
+                            }
+                            else if (order.Status == "Completed")
+                            {
+                                <span class="badge bg-success">Hoàn thành</span>
+                            }
+                            else if (order.Status == "Cancelled")
+                            {
+                                <span class="badge bg-danger">Đã hủy</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @foreach (var item in order.OrderItems)
+                    {
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-md-2">
+                                <img src="@(item.Product.Images.FirstOrDefault()?.ImagePath ?? "/images/placeholder.jpg")"
+                                     class="img-fluid rounded"
+                                     style="max-height: 80px; object-fit: cover;"
+                                     alt="@item.Product.Name">
+                            </div>
+                            <div class="col-md-5">
+                                <h6 class="mb-1">@item.Product.Name</h6>
+                                <small class="text-muted">@item.Product.Description</small>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="text-muted">x @item.Quantity</span>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <p class="text-danger fw-bold mb-0">
+                                    @string.Format("{0:N0}đ", item.Price * item.Quantity)
+                                </p>
+                            </div>
+                        </div>
+                        @if (order.OrderItems.Last() != item)
+                        {
+                            <hr>
+                        }
+                    }
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 text-end">
+                            <strong>Tổng tiền:</strong>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <h5 class="text-danger mb-0">
+                                @string.Format("{0:N0}đ", order.TotalPrice)
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

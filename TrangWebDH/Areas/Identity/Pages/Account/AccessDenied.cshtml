@@ -1,0 +1,10 @@
+﻿@page
+@{
+    ViewData["Title"] = "Truy cập bị từ chối";
+}
+
+<div class="text-center mt-5">
+    <h1 class="text-danger">@ViewData["Title"]</h1>
+    <p class="text-danger">Bạn không có quyền truy cập tài nguyên này.</p>
+    <a asp-page="/Index" class="btn btn-primary">Quay lại trang chủ</a>
+</div>

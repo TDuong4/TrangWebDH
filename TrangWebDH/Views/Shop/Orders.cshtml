@@ -1,0 +1,20 @@
+﻿@model List<Order>
+<h1>Đơn hàng</h1>
+<table class="table">
+    <tr><th>ID</th><th>Status</th><th>Action</th></tr>
+    @foreach (var o in Model)
+    {
+        <tr>
+            <td>@o.Id</td>
+            <td>@o.Status</td>
+            <td>
+                <form asp-action="UpdateOrder">
+                    <input type="hidden" name="id" value="@o.Id" />
+                    <input name="trackingCode" placeholder="Mã vận đơn" />
+                    <input name="shippingCompany" placeholder="Hãng vận chuyển" />
+                    <button type="submit">Cập nhật</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

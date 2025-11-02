@@ -1,0 +1,17 @@
+﻿@if (Model != null)
+{
+    <div class="row">
+        <h3>Kết quả tìm kiếm:</h3>
+        @foreach (var p in Model)
+        {
+            <div class="col-md-4">
+                <h5>@p.Name</h5>
+                <p>@p.Price VNĐ</p>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Không tìm thấy sản phẩm.</p>
+}

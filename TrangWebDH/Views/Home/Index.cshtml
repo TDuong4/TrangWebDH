@@ -1,0 +1,108 @@
+﻿@model List<TrangWebDH.Models.Product>
+@{
+    ViewData["Title"] = "Trang Chủ DH";
+}
+
+<!-- DANH MỤC NỔI BẬT – NÚT DROPDOWN -->
+<div class="container mb-5">
+    <h2 class="text-center mb-4 fw-bold text-dark">Danh mục nổi bật</h2>
+    <div class="text-center">
+        <div class="dropdown d-inline-block">
+            <button class="btn btn-outline-primary btn-lg dropdown-toggle px-5" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-grid-3x3-gap"></i> Chọn danh mục
+            </button>
+            <ul class="dropdown-menu shadow-lg">
+                <li>
+                    <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="DienTu">
+                        <i class="bi bi-laptop text-primary"></i> Điện tử
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="ThoiTrang">
+                        <i class="bi bi-tshirt text-success"></i> Thời trang
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="NoiThat">
+                        <i class="bi bi-sofa text-warning"></i> Nội thất
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="Sach">
+                        <i class="bi bi-book text-danger"></i> Sách
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- TÌM KIẾM + SẢN PHẨM -->
+<div class="container mb-5">
+    <form asp-controller="Home" asp-action="Search" method="get" class="d-flex justify-content-center mb-4">
+        <input class="form-control me-2 form-control-lg w-50 rounded-pill shadow-sm"
+               type="search" name="q" placeholder="Tìm kiếm sản phẩm..."
+               value="@Context.Request.Query["q"]" />
+        <button class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm" type="submit">
+            <i class="bi bi-search"></i> Tìm
+        </button>
+    </form>
+</div>
+
+<!-- SẢN PHẨM NỔI BẬT -->
+<div class="container">
+    <h2 class="text-center mb-4 fw-bold text-dark">Sản phẩm nổi bật</h2>
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <p class="text-muted fs-5">Không tìm thấy sản phẩm nào.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var p in Model)
+            {
+                <div class="col-md-3">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <img src="@(p.Images?.FirstOrDefault()?.ImagePath ?? "/images/no-image.png")"
+                             class="card-img-top" alt="@p.Name" style="height: 200px; object-fit: cover;" />
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title fw-bold">@p.Name</h6>
+                            <p class="text-danger fw-bold fs-5">@string.Format("{0:N0}", p.Price) ₫</p>
+                            <div class="mt-auto">
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@p.Id"
+                                   class="btn btn-primary w-100 rounded-pill">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- CSS -->
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%) !important;
+        }
+
+        .product-card {
+            transition: all 0.3s ease;
+        }
+
+            .product-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
+            }
+
+        .dropdown-item:hover {
+            background-color: #0d6efd !important;
+            color: white !important;
+        }
+    </style>
+}

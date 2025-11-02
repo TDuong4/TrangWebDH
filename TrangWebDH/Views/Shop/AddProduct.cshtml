@@ -1,0 +1,104 @@
+﻿@model TrangWebDH.Models.Product
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">➕ Thêm sản phẩm mới</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="AddProduct" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    Tên sản phẩm <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" required />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Mô tả</label>
+                                <input asp-for="Description" class="form-control" placeholder="Mô tả ngắn gọn" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    Giá (VNĐ) <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Price" type="number" class="form-control"
+                                       placeholder="0" required min="1000" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Số lượng</label>
+                                <input asp-for="Quantity" type="number" class="form-control"
+                                       placeholder="Để trống = không giới hạn" min="0" />
+                                <small class="text-muted">Không nhập = không giới hạn số lượng</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Kích cỡ/Cân nặng</label>
+                                <input asp-for="SizeOrWeight" class="form-control"
+                                       placeholder="VD: Size M, 500g..." />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    Loại sản phẩm <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="ProductType" class="form-select" asp-items="ViewBag.ProductTypes" required>
+                                    <option value="">-- Chọn loại --</option>
+                                </select>
+                                <span asp-validation-for="ProductType" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- INFO: Ảnh sẽ tự động dùng placeholder -->
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            Sản phẩm sẽ sử dụng ảnh mặc định. Bạn có thể cập nhật ảnh sau.
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="bi bi-check-circle"></i> Thêm sản phẩm
+                            </button>
+                            <a asp-action="Products" class="btn btn-secondary btn-lg px-5 ms-2">
+                                <i class="bi bi-x-circle"></i> Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}

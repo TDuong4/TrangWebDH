@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Chỉnh sửa thông tin shop";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Chỉnh sửa thông tin shop</h2>
+    <form asp-action="EditInfo" method="post">
+        <div class="mb-3">
+            <label>Tên shop</label>
+            <input type="text" name="Name" class="form-control" value="@ViewBag.Shop.Name" />
+        </div>
+        <div class="mb-3">
+            <label>Địa chỉ</label>
+            <input type="text" name="Address" class="form-control" value="@ViewBag.Shop.Address" />
+        </div>
+        <button type="submit" class="btn btn-success">Lưu</button>
+    </form>
+</div>

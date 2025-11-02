@@ -1,0 +1,127 @@
+﻿@model List<TrangWebDH.Models.ApplicationUser>
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject UserManager<TrangWebDH.Models.ApplicationUser> UserManager
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">👥 Quản lý người dùng</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-primary">
+                        <tr>
+                            <th style="width: 5%">#</th>
+                            <th style="width: 20%">Email</th>
+                            <th style="width: 20%">Họ tên</th>
+                            <th style="width: 15%">Vai trò</th>
+                            <th style="width: 15%">Trạng thái</th>
+                            <th style="width: 15%">Ngày tạo</th>
+                            <th style="width: 10%">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int index = 1;
+                        }
+                        @foreach (var user in Model)
+                        {
+                            var roles = await UserManager.GetRolesAsync(user);
+                            var isLocked = await UserManager.IsLockedOutAsync(user);
+
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>
+                                    <strong>@user.Email</strong>
+                                </td>
+                                <td>@(user.FullName ?? "Chưa cập nhật")</td>
+                                <td>
+                                    @if (roles.Any())
+                                    {
+                                        @foreach (var role in roles)
+                                        {
+                                            <span class="badge @(role == "Admin" ? "bg-danger" : role == "ShopOwner" ? "bg-primary" : "bg-success") me-1">
+                                                @role
+                                            </span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có vai trò</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (isLocked)
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-lock"></i> Đã khóa
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-unlock"></i> Hoạt động
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <small>@user.LockoutEnd?.ToString("dd/MM/yyyy") ?? "N/A"</small>
+                                </td>
+                                <td class="text-center">
+                                    @if (user.Email != "admin@trangwebdh.com")
+                                    {
+                                        @if (!isLocked)
+                                        {
+                                            <form asp-action="LockUser" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@user.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Khóa người dùng @user.Email?')">
+                                                    <i class="bi bi-lock"></i> Khóa
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="UnlockUser" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@user.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                        onclick="return confirm('Mở khóa người dùng @user.Email?')">
+                                                    <i class="bi bi-unlock"></i> Mở
+                                                </button>
+                                            </form>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            <i class="bi bi-shield-check"></i> Admin
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-info mt-3">
+                <i class="bi bi-info-circle"></i>
+                <strong>Tổng số người dùng:</strong> @Model.Count
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+﻿@page
+@model TrangWebDH.Areas.Identity.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4 fw-bold text-primary">@ViewData["Title"]</h2>
+                    <form method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-3"></div>
+
+                        <!-- EMAIL -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label fw-semibold">Email</label>
+                            <input asp-for="Input.Email" class="form-control form-control-lg rounded-pill" placeholder="you@example.com" required />
+                            <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                        </div>
+
+                        <!-- HỌ TÊN -->
+                        <div class="mb-3">
+                            <label asp-for="Input.FullName" class="form-label fw-semibold">Họ tên</label>
+                            <input asp-for="Input.FullName" class="form-control form-control-lg rounded-pill" placeholder="Nguyễn Văn A" required />
+                            <div class="invalid-feedback">Vui lòng nhập họ tên.</div>
+                        </div>
+
+                        <!-- CHỌN LOẠI TÀI KHOẢN – MỚI THÊM -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Loại tài khoản</label>
+                            <select name="Role" class="form-select form-select-lg rounded-pill" id="roleSelect" required>
+                                <option value="Customer">Khách hàng (mua sắm)</option>
+                                <option value="ShopOwner">Chủ shop (bán hàng)</option>
+                            </select>
+                        </div>
+
+                        <!-- TÊN SHOP – ẨN/HIỆN BẰNG JS -->
+                        <div class="mb-3" id="shopNameGroup" style="display: none;">
+                            <label class="form-label fw-semibold">Tên cửa hàng</label>
+                            <input name="ShopName" class="form-control form-control-lg rounded-pill" placeholder="VD: Shop XYZ" />
+                            <div class="form-text text-muted">Tên shop sẽ hiển thị công khai.</div>
+                        </div>
+
+                        <!-- MẬT KHẨU -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label fw-semibold">Mật khẩu</label>
+                            <input asp-for="Input.Password" type="password" class="form-control form-control-lg rounded-pill" placeholder="Tối thiểu 6 ký tự" required />
+                            <div class="invalid-feedback">Mật khẩu ít nhất 6 ký tự.</div>
+                        </div>
+
+                        <!-- XÁC NHẬN MẬT KHẨU -->
+                        <div class="mb-4">
+                            <label asp-for="Input.ConfirmPassword" class="form-label fw-semibold">Xác nhận mật khẩu</label>
+                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control form-control-lg rounded-pill" placeholder="Nhập lại mật khẩu" required />
+                            <div class="invalid-feedback">Mật khẩu không khớp.</div>
+                        </div>
+
+                        <!-- NÚT ĐĂNG KÝ -->
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm">
+                            Đăng ký ngay
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">
+                            Đã có tài khoản?
+                            <a asp-page="./Login" class="text-decoration-none fw-semibold text-primary">Đăng nhập</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // JS hiện/ẩn tên shop – mượt như cũ
+        document.getElementById('roleSelect').addEventListener('change', function () {
+            document.getElementById('shopNameGroup').style.display =
+                this.value === 'ShopOwner' ? 'block' : 'none';
+        });
+
+        // Validation đẹp như cũ
+        (function () {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

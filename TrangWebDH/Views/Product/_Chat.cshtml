@@ -1,0 +1,9 @@
+﻿@model List<ChatMessage>
+
+@foreach (var m in Model)
+{
+    <div class="mb-2 p-2 rounded @(m.Sender == "Customer" ? "bg-primary text-white ms-auto" : "bg-light")" style="max-width: 80%;">
+        <small><strong>@(m.Sender == "Customer" ? "Bạn" : "Shop")</strong> - @m.SentDate.ToString("HH:mm")</small>
+        <p class="mb-0">@m.Message</p>
+    </div>
+}

@@ -1,0 +1,37 @@
+﻿@model List<Order>
+
+<div class="container">
+    <h2>Báo cáo doanh thu</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <a asp-action="Report" asp-route-year="@DateTime.Now.Year" asp-route-month="@DateTime.Now.Month" class="btn btn-primary">Tháng này</a>
+        </div>
+        <div class="col-md-3">
+            <a asp-action="Report" asp-route-year="@DateTime.Now.Year" class="btn btn-secondary">Năm này</a>
+        </div>
+    </div>
+
+    <p><strong>Doanh thu:</strong> @ViewBag.Revenue ₫</p>
+    <p><strong>Số đơn hàng:</strong> @ViewBag.OrderCount</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Đơn hàng</th>
+                <th>Ngày</th>
+                <th>Tổng tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model)
+            {
+                <tr>
+                    <td>@o.Id</td>
+                    <td>@o.OrderDate</td>
+                    <td>@o.TotalPrice ₫</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
